@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/seollal-game/',
+  base: '/mini-game/',
   server: {
     host: true,
   },
