@@ -1,5 +1,5 @@
 {
-  "name": "seollal-game",
+  "name": "mini-game",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "deploy:netlify": "DEPLOY_TARGET=netlify vite build && netlify deploy --dir=dist --prod"
   },
   "dependencies": {
     "firebase": "^11.0.0",

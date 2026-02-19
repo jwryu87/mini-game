@@ -128,7 +128,8 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
   const caughtLiar = mostVoted.length === 1 ? mostVoted[0] : null
   const isLiar = gs.liarId === playerId
   const liarCaught = caughtLiar === gs.liarId
-  const liarGuessCorrect = gs.liarGuess && gs.liarGuess === gs.keyword
+  const normalize = s => (s || '').replace(/\s/g, '').toLowerCase()
+  const liarGuessCorrect = gs.liarGuess && normalize(gs.liarGuess) === normalize(gs.keyword)
 
   return (
     <div style={{ ...S.wrap, background: '#fff', borderRadius: 20, boxShadow: '0 2px 20px rgba(0,0,0,0.06)', overflow: 'hidden' }}>

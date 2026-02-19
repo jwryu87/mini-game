@@ -2,6 +2,13 @@
 
 실시간 멀티플레이 미니게임 모음 (최대 8인)
 
+## 🔗 사이트
+
+| 환경 | URL | 비고 |
+|------|-----|------|
+| **Netlify (메인)** | https://mini-game-party.netlify.app | 팀미팅 시 이 주소 공유 |
+| GitHub Pages | https://jwryu87.github.io/mini-game/ | 백업용 (개인 아이디 노출) |
+
 ## 게임 목록
 
 | 게임 | 설명 | 방식 |
@@ -29,7 +36,10 @@ npm run dev
 ## 배포
 
 ```bash
-npm run build
+# Netlify 배포 (메인) — 팀에 공유할 주소
+npm run deploy:netlify
+
+# GitHub Pages 배포 (백업)
 npm run deploy
 ```
 
@@ -37,4 +47,4 @@ npm run deploy
 
 - React 18 + Vite
 - Firebase Realtime Database
-- GitHub Pages
+- Netlify / GitHub Pages
