@@ -67,6 +67,14 @@ export default function GeoGuessrTeam({ roomCode, playerId, playerName, players,
     if (viewerRef.current) { try { viewerRef.current.remove() } catch { /* noop */ } viewerRef.current = null }
   }, [])
 
+  // 라운드가 아닐 때(결과공개/종료)는 뷰어를 정리 → 다음 라운드에 새 컨테이너로 다시 생성
+  useEffect(() => {
+    if (phase !== 'round' && viewerRef.current) {
+      try { viewerRef.current.remove() } catch { /* noop */ }
+      viewerRef.current = null
+    }
+  }, [phase])
+
   // Leaflet 추측 지도
   useEffect(() => {
     if (phase !== 'round' || !mapElRef.current || mapRef.current) return
