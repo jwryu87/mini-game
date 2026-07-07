@@ -66,6 +66,7 @@ function RoomChat({ roomCode, playerId, playerName }) {
 import YutNori from '../games/YutNori'
 import LiarGame from '../games/LiarGame'
 import SnowFight from '../games/SnowFight'
+import GeoGuessrTeam from '../games/GeoGuessrTeam'
 
 const DEFAULT_TEAM_NAMES = ['홍팀', '청팀', '녹팀', '주황팀']
 const TEAM_EMOJI = ['🔴', '🔵', '🟢', '🟠']
@@ -75,6 +76,7 @@ const GAME_COMPONENTS = {
   yutnori: YutNori,
   liar: LiarGame,
   snowfight: SnowFight,
+  geoguessr: GeoGuessrTeam,
 }
 
 export default function GameRoom({ roomCode, playerId, playerName, games, onLeave }) {
@@ -202,7 +204,7 @@ export default function GameRoom({ roomCode, playerId, playerName, games, onLeav
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ textAlign: 'center' }}>
             <div className="room-code" style={{ fontSize: 28, padding: '4px 16px', letterSpacing: 4 }}>{roomCode}</div>
-            <span style={{ color: '#888', fontSize: 11 }}>{playerList.length}/8명</span>
+            <span style={{ color: '#888', fontSize: 11 }}>{playerList.length}/15명</span>
           </div>
           <button className="btn-secondary" onClick={leaveRoom} style={{ padding: '4px 12px', fontSize: 12 }}>
             나가기

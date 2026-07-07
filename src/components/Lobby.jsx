@@ -51,8 +51,8 @@ export default function Lobby({ playerId, playerName: savedName, onJoin }) {
       }
       const room = snapshot.val()
       const playerCount = room.players ? Object.keys(room.players).length : 0
-      if (playerCount >= 8) {
-        setError('방이 가득 찼습니다 (최대 8명)')
+      if (playerCount >= 15) {
+        setError('방이 가득 찼습니다 (최대 15명)')
         setLoading(false)
         return
       }

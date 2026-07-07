@@ -6,6 +6,7 @@ const GAMES = [
   { id: 'yutnori', name: '윷놀이', emoji: '🎯', desc: '전통 보드게임' },
   { id: 'liar', name: '라이어 게임', emoji: '🤥', desc: '거짓말쟁이를 찾아라' },
   { id: 'snowfight', name: '눈싸움 배틀', emoji: '🐾', desc: '동물 눈싸움 대전' },
+  { id: 'geoguessr', name: 'GeoGuessr 팀전', emoji: '🌍', desc: '거리뷰 보고 위치 맞히기' },
 ]
 
 const THEMES = [
