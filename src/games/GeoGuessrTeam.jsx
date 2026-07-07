@@ -71,7 +71,7 @@ export default function GeoGuessrTeam({ roomCode, playerId, playerName, players,
   useEffect(() => {
     if (phase !== 'round' || !mapElRef.current || mapRef.current) return
     const map = L.map(mapElRef.current, { attributionControl: false, worldCopyJump: true }).setView([20, 0], 1)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19, subdomains: 'abcd' }).addTo(map)
     map.on('click', e => {
       setMyGuess({ lat: e.latlng.lat, lng: e.latlng.lng })
       if (markerRef.current) markerRef.current.setLatLng(e.latlng)
@@ -95,19 +95,29 @@ export default function GeoGuessrTeam({ roomCode, playerId, playerName, players,
   }, [round])
 
   // ── 호스트 액션 ──
+  // 다음 위치를 백그라운드로 미리 받아 gameState.nextLocation 에 저장 (호스트만)
+  const prefetchNext = () => {
+    if (!MAPILLARY_TOKEN) return
+    fetchRandomLocation(MAPILLARY_TOKEN)
+      .then(loc => loc && update(ref(db, `rooms/${roomCode}/gameState`), { nextLocation: loc }))
+      .catch(() => {})
+  }
   const startGame = async () => {
     await set(ref(db, `rooms/${roomCode}/gameState`), { phase: 'intro', round: 0, teamScores: {}, roundScores: {} })
+    prefetchNext() // intro 보는 동안 1라운드 위치 미리 로드
   }
   const loadNextRound = async () => {
     if (!isHost) return
-    if (!MAPILLARY_TOKEN) { setErr('Mapillary 토큰 미설정 — src/mapillaryConfig.js 에 토큰을 넣어주세요.'); return }
+    if (!MAPILLARY_TOKEN) { setErr('Mapillary 토큰 미설정 — .env 의 VITE_MAPILLARY_TOKEN 을 확인해주세요.'); return }
     setBusy(true); setErr('')
     try {
-      const loc = await fetchRandomLocation(MAPILLARY_TOKEN)
+      let loc = gs?.nextLocation || null // 프리페치된 위치가 있으면 즉시 사용
+      if (!loc) loc = await fetchRandomLocation(MAPILLARY_TOKEN)
       if (!loc) { setErr('스트리트뷰 위치를 찾지 못했어요. 다시 눌러주세요.'); setBusy(false); return }
       await update(ref(db, `rooms/${roomCode}/gameState`), {
-        phase: 'round', round: round + 1, location: loc, guesses: {},
+        phase: 'round', round: round + 1, location: loc, guesses: {}, nextLocation: null,
       })
+      prefetchNext() // 이번 라운드 진행 중 다음 라운드 미리 로드
     } catch (e) { setErr(String(e.message || e)) }
     setBusy(false)
   }
@@ -207,12 +217,12 @@ export default function GeoGuessrTeam({ roomCode, playerId, playerName, players,
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <div style={{ flex: '1 1 420px', minWidth: 280 }}>
             {MAPILLARY_TOKEN
-              ? <div ref={mlyElRef} style={{ width: '100%', height: 340, borderRadius: 10, overflow: 'hidden', background: '#000' }} />
-              : <div style={{ height: 340, borderRadius: 10, background: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 20 }}>
+              ? <div ref={mlyElRef} style={{ width: '100%', height: 'min(58vh, 520px)', borderRadius: 10, overflow: 'hidden', background: '#000' }} />
+              : <div style={{ height: 'min(58vh, 520px)', borderRadius: 10, background: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 20 }}>
                   <span style={{ color: '#C62828', fontSize: 13 }}>Mapillary 토큰이 없어 파노라마를 표시할 수 없어요.<br />src/mapillaryConfig.js 에 토큰을 넣어주세요.</span>
                 </div>}
             <div style={{ marginTop: 8 }}>
-              <div ref={mapElRef} style={{ width: '100%', height: 240, borderRadius: 10, overflow: 'hidden', border: '1px solid #ddd' }} />
+              <div ref={mapElRef} style={{ width: '100%', height: 360, borderRadius: 10, overflow: 'hidden', border: '1px solid #ddd' }} />
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
                 <button className="btn-primary" onClick={submitGuess} disabled={!myGuess || submitted} style={{ padding: '8px 20px' }}>
                   {submitted ? '제출 완료 ✓' : myGuess ? '이 위치로 제출' : '지도를 클릭하세요'}

@@ -36,7 +36,8 @@ export const CITY_POOL = [
 // Mapillary는 이미지 밀도가 높은 곳에서 넓은 bbox 요청을 "too much data"로 거부한다.
 // → 넓게 시작해 거부당하면 bbox를 좁혀 재시도. (저밀도 도시는 넓게, 고밀도 도시는 좁게 잡힘)
 async function fetchImageNear(lat, lng, token) {
-  for (const d of [0.008, 0.004, 0.002, 0.001]) {
+  // 중간 반경부터 시작해서 거부(과다)나 빈 응답이면 다른 반경으로 재시도 (호출 횟수 최소화)
+  for (const d of [0.006, 0.003, 0.0015, 0.001]) {
     const bbox = [lng - d, lat - d, lng + d, lat + d].join(',')
     const url = `https://graph.mapillary.com/images?access_token=${token}&bbox=${bbox}&limit=50&fields=id,computed_geometry,geometry`
     const res = await fetch(url)
@@ -53,7 +54,7 @@ async function fetchImageNear(lat, lng, token) {
       const geo = pick.computed_geometry || pick.geometry
       return { imageId: pick.id, lat: geo.coordinates[1], lng: geo.coordinates[0] }
     }
-    return null // 정상 응답인데 이미지 없음 → 이 도시는 커버리지 부족(다음 도시 시도)
+    // 이미지 없으면 다음 반경으로 계속
   }
   return null
 }
