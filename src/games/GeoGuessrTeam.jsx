@@ -81,9 +81,12 @@ export default function GeoGuessrTeam({ roomCode, playerId, playerName, players,
     const map = L.map(mapElRef.current, { attributionControl: false, worldCopyJump: true }).setView([20, 0], 1)
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19, subdomains: 'abcd' }).addTo(map)
     map.on('click', e => {
-      setMyGuess({ lat: e.latlng.lat, lng: e.latlng.lng })
+      const g = { lat: e.latlng.lat, lng: e.latlng.lng }
+      setMyGuess(g)
       if (markerRef.current) markerRef.current.setLatLng(e.latlng)
       else markerRef.current = L.circleMarker(e.latlng, { radius: 8, color: '#C62828', fillColor: '#E53935', fillOpacity: 1, weight: 2 }).addTo(map)
+      // 클릭 즉시 제출(다시 클릭하면 변경). 진행자가 결과 공개 시 마지막 위치로 채점
+      update(ref(db, `rooms/${roomCode}/gameState/guesses`), { [playerId]: g }).catch(() => {})
     })
     mapRef.current = map
     setTimeout(() => map.invalidateSize(), 120)
@@ -128,10 +131,6 @@ export default function GeoGuessrTeam({ roomCode, playerId, playerName, players,
       prefetchNext() // 이번 라운드 진행 중 다음 라운드 미리 로드
     } catch (e) { setErr(String(e.message || e)) }
     setBusy(false)
-  }
-  const submitGuess = async () => {
-    if (!myGuess || submitted) return
-    await update(ref(db, `rooms/${roomCode}/gameState/guesses`), { [playerId]: myGuess })
   }
   const revealRound = async () => {
     if (!isHost || !location) return
@@ -231,11 +230,11 @@ export default function GeoGuessrTeam({ roomCode, playerId, playerName, players,
                 </div>}
             <div style={{ marginTop: 8 }}>
               <div ref={mapElRef} style={{ width: '100%', height: 360, borderRadius: 10, overflow: 'hidden', border: '1px solid #ddd' }} />
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
-                <button className="btn-primary" onClick={submitGuess} disabled={!myGuess || submitted} style={{ padding: '8px 20px' }}>
-                  {submitted ? '제출 완료 ✓' : myGuess ? '이 위치로 제출' : '지도를 클릭하세요'}
-                </button>
-                <span style={{ fontSize: 12, color: '#888' }}>제출 {numSubmitted}/{players.length}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: submitted ? '#2E7D32' : '#888' }}>
+                  {submitted ? '✅ 위치 선택됨 — 지도를 다시 클릭하면 변경돼요' : '🗺️ 지도를 클릭해 위치를 선택하세요'}
+                </span>
+                <span style={{ fontSize: 12, color: '#888', marginLeft: 'auto' }}>제출 {numSubmitted}/{players.length}</span>
               </div>
             </div>
           </div>
