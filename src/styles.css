@@ -1,19 +1,20 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --primary: #FF6B6B;
-  --primary-hover: #FF5252;
-  --primary-shadow: #E85555;
-  --mint: #06C7BE;
-  --yellow: #FFD166;
-  --bg: #FFF9F5;
+  --primary: #7C6BF0;
+  --primary-hover: #6B5AE8;
+  --primary-shadow: #4B3DBE;
+  --mint: #37CFBE;
+  --yellow: #FFC44D;
+  --coral: #FF7B7B;
+  --bg: #F3F0FF;
   --card-bg: #fff;
-  --card-border: #F2E9E4;
-  --text: #3D3A38;
-  --text-sub: #B8AEA8;
-  --accent-bg: #FFF0EC;
-  --input-border: #EADFD8;
-  --radius: 20px;
+  --card-border: #EDE9FB;
+  --text: #322C4E;
+  --text-sub: #948CB6;
+  --accent-bg: #F0EDFE;
+  --input-border: #E4DEFB;
+  --radius: 22px;
   --radius-sm: 14px;
   --radius-btn: 16px;
 }
@@ -22,9 +23,9 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
   background: var(--bg);
   background-image:
-    radial-gradient(circle at 12% 18%, rgba(6, 199, 190, 0.07), transparent 42%),
-    radial-gradient(circle at 88% 12%, rgba(255, 209, 102, 0.09), transparent 40%),
-    radial-gradient(circle at 78% 88%, rgba(255, 107, 107, 0.06), transparent 45%);
+    radial-gradient(circle at 12% 18%, rgba(124, 107, 240, 0.14), transparent 45%),
+    radial-gradient(circle at 88% 12%, rgba(255, 196, 77, 0.12), transparent 40%),
+    radial-gradient(circle at 78% 88%, rgba(55, 207, 190, 0.12), transparent 45%);
   background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
@@ -82,17 +83,23 @@ input:focus, select:focus { border-color: var(--primary); }
   border: none;
   border-radius: var(--radius);
   padding: 18px;
-  box-shadow: 0 6px 26px rgba(216, 90, 48, 0.09);
+  box-shadow: 0 10px 34px rgba(80, 60, 180, 0.12);
 }
 
 .header {
   text-align: center;
-  padding: 30px 20px 20px;
+  padding: 24px 20px 16px;
 }
-.header h1 { font-size: 32px; color: var(--primary); font-weight: 800; }
-.header p { color: var(--text-sub); margin-top: 4px; }
+.header .brand-row { display: inline-flex; align-items: center; gap: 12px; text-align: left; }
+.header .mascot { animation: bob 3.2s ease-in-out infinite; flex-shrink: 0; }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .header .mascot { animation: none; } }
+.header h1 { font-size: 30px; color: var(--primary); font-weight: 800; letter-spacing: -0.5px; }
+.header p { color: var(--mint); margin-top: 3px; font-weight: 600; font-size: 13px; }
 .header.compact { padding: 2px 10px; }
-.header.compact h1 { font-size: 12px; color: #aaa; }
+.header.compact .brand-row { gap: 7px; }
+.header.compact .mascot { width: 20px; height: 20px; }
+.header.compact h1 { font-size: 13px; color: var(--text-sub); }
 .header.compact p { display: none; }
 
 .lobby { text-align: center; }
@@ -104,9 +111,10 @@ input:focus, select:focus { border-color: var(--primary); }
   font-weight: 900;
   letter-spacing: 6px;
   color: var(--primary);
-  background: var(--accent-bg);
-  padding: 16px 32px;
-  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(124,107,240,0.10), rgba(124,107,240,0.04));
+  border: 2px dashed rgba(124,107,240,0.38);
+  padding: 14px 28px;
+  border-radius: 18px;
   display: inline-block;
   margin: 16px 0;
 }

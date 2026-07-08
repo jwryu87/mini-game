@@ -82,8 +82,20 @@ export default function App() {
   return (
     <div className="container">
       <div className={`header${room ? ' compact' : ''}`}>
-        <h1>🎮 미니게임 파티</h1>
-        <p>다 같이 즐겨요!</p>
+        <div className="brand-row">
+          <svg className="mascot" width="46" height="46" viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M50 10 C27 10 16 29 16 53 L16 87 Q23 80 29.5 87 Q36 94 42.5 87 Q49 80 50 87 Q51 80 57.5 87 Q64 94 70.5 87 Q77 80 84 87 L84 53 C84 29 73 10 50 10 Z" fill="#7C6BF0" />
+            <ellipse cx="39" cy="49" rx="5.5" ry="7" fill="#2A2247" />
+            <ellipse cx="61" cy="49" rx="5.5" ry="7" fill="#2A2247" />
+            <circle cx="31" cy="60" r="6" fill="#FF7B7B" opacity="0.55" />
+            <circle cx="69" cy="60" r="6" fill="#FF7B7B" opacity="0.55" />
+            <path d="M44 62 Q50 68 56 62" stroke="#2A2247" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+          </svg>
+          <div>
+            <h1>미니게임 파티</h1>
+            <p>방 코드로 모여서, 다 같이 한 판 🎉</p>
+          </div>
+        </div>
       </div>
       <div className="top-bar">
         <div className="theme-picker">
