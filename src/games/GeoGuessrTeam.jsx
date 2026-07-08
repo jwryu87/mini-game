@@ -5,9 +5,11 @@ import { Viewer } from 'mapillary-js'
 import 'mapillary-js/dist/mapillary.css'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import GhostAvatar from '../components/GhostAvatar'
 
 const TEAM_EMOJI = ['🔴', '🔵', '🟢', '🟠']
 const TEAM_CSS = ['team-0', 'team-1', 'team-2', 'team-3']
+const TEAM_HEX = ['#FF7B7B', '#6BA6FF', '#37CFBE', '#FFC44D']
 const DEFAULT_TEAM_NAMES = ['홍팀', '청팀', '녹팀', '주황팀']
 const TOTAL_ROUNDS = 5
 
@@ -288,8 +290,9 @@ export default function GeoGuessrTeam({ roomCode, playerId, playerName, players,
     return (
       <div className="card" style={{ padding: 20, textAlign: 'center' }}>
         <Header />
-        <p style={{ fontSize: 48, margin: '8px 0' }}>🏆</p>
-        <p style={{ fontSize: 22, fontWeight: 800 }}>우승: {winner != null ? teamName(winner) : '무승부'}</p>
+        <p style={{ fontSize: 40, margin: '4px 0 0' }}>🏆</p>
+        {winner != null && <GhostAvatar color={TEAM_HEX[winner]} size={74} />}
+        <p style={{ fontSize: 22, fontWeight: 800, marginTop: 4 }}>우승: {winner != null ? teamName(winner) : '무승부'}</p>
         <div style={{ maxWidth: 320, margin: '16px auto 0', display: 'grid', gap: 6 }}>
           {ranking.map((r, idx) => (
             <div key={r.i} className={`player-card ${TEAM_CSS[r.i]}`} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px' }}>

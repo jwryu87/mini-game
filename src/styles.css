@@ -146,6 +146,27 @@ input:focus, select:focus { border-color: var(--primary); }
 .player-card.team-2 { background: #E8F5E9; border-color: #43A047; color: #2E7D32; }
 .player-card.team-3 { background: #FFF3E0; border-color: #FB8C00; color: #E65100; }
 
+.roster-card {
+  background: var(--card-bg);
+  border: 1.5px solid var(--card-border);
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(80, 60, 180, 0.05);
+}
+.team-chip {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 20px;
+  line-height: 1.4;
+  box-shadow: none;
+}
+.team-chip.team-0 { background: #FFEBEE; color: #C62828; }
+.team-chip.team-1 { background: #E3F2FD; color: #1565C0; }
+.team-chip.team-2 { background: #E8F5E9; color: #2E7D32; }
+.team-chip.team-3 { background: #FFF3E0; color: #E65100; }
+
 .game-selector {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

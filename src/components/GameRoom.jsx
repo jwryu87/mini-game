@@ -216,13 +216,13 @@ export default function GameRoom({ roomCode, playerId, playerName, games, onLeav
           </div>
           <div className="player-list" style={{ gap: 4 }}>
             {playerList.sort((a, b) => a.order - b.order).map(p => (
-              <div key={p.id} className={`player-card ${TEAM_CSS[p.team]}`} style={{ padding: '6px 8px' }}>
-                <GhostAvatar color={p.avatarColor || TEAM_HEX[p.team]} size={32} cheek={false} />
-                <div style={{ fontSize: 12, fontWeight: 700, marginTop: 2 }}>{p.name} {p.id === roomData.host ? '👑' : ''}</div>
-                <div style={{ fontSize: 10, color: '#666' }}>{getTeamName(p.team)}</div>
+              <div key={p.id} className="roster-card" style={{ padding: '8px 6px' }}>
+                <GhostAvatar color={p.avatarColor || TEAM_HEX[p.team]} size={34} cheek={false} />
+                <div style={{ fontSize: 12, fontWeight: 700, marginTop: 3 }}>{p.name}{p.id === roomData.host ? ' 👑' : ''}</div>
+                <span className={`team-chip ${TEAM_CSS[p.team]}`} style={{ marginTop: 4 }}>{getTeamName(p.team)}</span>
                 {isHost && p.id !== playerId && (
                   <select value={p.team} onChange={e => changeTeam(p.id, Number(e.target.value))}
-                    style={{ marginTop: 2, padding: 1, fontSize: 10, width: '100%' }}>
+                    style={{ marginTop: 4, padding: 1, fontSize: 10, width: '100%' }}>
                     {[0, 1, 2, 3].map(i => (
                       <option key={i} value={i}>{teamNames[i] || DEFAULT_TEAM_NAMES[i]}</option>
                     ))}
@@ -235,25 +235,23 @@ export default function GameRoom({ roomCode, playerId, playerName, games, onLeav
           {isHost && usedTeams.length > 0 && (
             <div style={{ marginTop: 6 }}>
               <h3 style={{ fontSize: 11, margin: '0 0 3px', color: '#888' }}>✏️ 팀 이름</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
-                {[0, 1, 2, 3].map(i => (
-                  <div key={i}>
-                    {editingTeam === i ? (
-                      <div style={{ display: 'flex', gap: 2 }}>
-                        <input value={teamNameInput} onChange={e => setTeamNameInput(e.target.value)}
-                          onKeyDown={e => e.key === 'Enter' && saveTeamName(i)} maxLength={6} autoFocus
-                          style={{ flex: 1, padding: 3, fontSize: 10, width: '100%' }} placeholder={DEFAULT_TEAM_NAMES[i]} />
-                        <button className="btn-primary" onClick={() => saveTeamName(i)}
-                          style={{ padding: '2px 6px', fontSize: 10 }}>✓</button>
-                      </div>
-                    ) : (
-                      <button className={`player-card ${TEAM_CSS[i]}`}
-                        onClick={() => { setEditingTeam(i); setTeamNameInput(teamNames[i] || '') }}
-                        style={{ width: '100%', cursor: 'pointer', fontSize: 10, padding: '4px 6px', textAlign: 'center' }}>
-                        {getTeamName(i)} ✏️
-                      </button>
-                    )}
-                  </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                {usedTeams.map(i => (
+                  editingTeam === i ? (
+                    <div key={i} style={{ display: 'flex', gap: 2 }}>
+                      <input value={teamNameInput} onChange={e => setTeamNameInput(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && saveTeamName(i)} maxLength={6} autoFocus
+                        style={{ width: 64, padding: '3px 6px', fontSize: 11 }} placeholder={DEFAULT_TEAM_NAMES[i]} />
+                      <button className="btn-primary" onClick={() => saveTeamName(i)}
+                        style={{ padding: '2px 8px', fontSize: 11 }}>✓</button>
+                    </div>
+                  ) : (
+                    <button key={i} className={`team-chip ${TEAM_CSS[i]}`}
+                      onClick={() => { setEditingTeam(i); setTeamNameInput(teamNames[i] || '') }}
+                      style={{ cursor: 'pointer', border: 'none' }}>
+                      {getTeamName(i)} ✏️
+                    </button>
+                  )
                 ))}
               </div>
             </div>
