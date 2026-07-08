@@ -186,17 +186,7 @@ export default function GameRoom({ roomCode, playerId, playerName, games, onLeav
   // Find which teams are actually in use
   const usedTeams = [...new Set(playerList.map(p => p.team))].sort()
 
-  const gameIdx = games.findIndex(g => g.id === selectedGame)
-  const carouselIdx = gameIdx >= 0 ? gameIdx : 0
-  const prevGame = () => {
-    const i = (carouselIdx - 1 + games.length) % games.length
-    setSelectedGame(games[i].id)
-  }
-  const nextGame = () => {
-    const i = (carouselIdx + 1) % games.length
-    setSelectedGame(games[i].id)
-  }
-  const displayGame = games[carouselIdx]
+  const activeGame = games.find(g => g.id === selectedGame) || games[0]
 
   return (
     <div className="card" style={{ padding: 12 }}>
@@ -270,30 +260,26 @@ export default function GameRoom({ roomCode, playerId, playerName, games, onLeav
           )}
         </div>
 
-        {/* Center: game carousel + start */}
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          {isHost ? (
-            <>
-              <div className="game-carousel">
-                <button className="carousel-arrow" onClick={prevGame}>‹</button>
-                <div className="carousel-card" onClick={() => setSelectedGame(displayGame.id)}>
-                  <span style={{ fontSize: 48 }}>{displayGame.emoji}</span>
-                  <div style={{ fontSize: 18, fontWeight: 800, marginTop: 6 }}>{displayGame.name}</div>
-                  <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>{displayGame.desc}</div>
-                  <div style={{ fontSize: 10, color: '#bbb', marginTop: 6 }}>{carouselIdx + 1} / {games.length}</div>
-                </div>
-                <button className="carousel-arrow" onClick={nextGame}>›</button>
-              </div>
-              <button className="btn-primary" onClick={() => startGame(displayGame.id)}
-                style={{ fontSize: 15, padding: '10px 32px', marginTop: 8 }}>
-                🚀 {displayGame.name} 시작!
+        {/* Center: game gallery + start */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h3 style={{ fontSize: 13, margin: '0 0 8px' }}>🎮 게임 고르기</h3>
+          <div className="game-gallery">
+            {games.map(g => (
+              <button key={g.id} className={`game-tile${activeGame.id === g.id ? ' sel' : ''}`}
+                onClick={() => isHost && setSelectedGame(g.id)} disabled={!isHost}>
+                <span className="em">{g.emoji}</span>
+                <span className="gn">{g.name}</span>
+                <span className="gd">{g.desc}</span>
               </button>
-            </>
+            ))}
+          </div>
+          {isHost ? (
+            <button className="btn-primary" onClick={() => startGame(activeGame.id)}
+              style={{ width: '100%', marginTop: 12, padding: '13px' }}>
+              🚀 {activeGame.name} 시작!
+            </button>
           ) : (
-            <div style={{ textAlign: 'center', color: '#888' }}>
-              <p style={{ fontSize: 28 }}>⏳</p>
-              <p style={{ fontSize: 13 }}>방장이 게임을 선택 중...</p>
-            </div>
+            <p style={{ textAlign: 'center', color: '#888', fontSize: 13, marginTop: 12 }}>⏳ 방장이 게임 고르는 중...</p>
           )}
         </div>
 

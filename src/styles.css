@@ -165,6 +165,21 @@ input:focus, select:focus { border-color: var(--primary); }
 .game-btn .emoji { font-size: 40px; display: block; margin-bottom: 8px; }
 .game-btn .name { font-size: 18px; font-weight: 700; }
 
+/* Game Gallery (대기실 게임 그리드) */
+.game-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.game-tile {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 14px 8px; border: 2px solid var(--card-border); border-radius: 16px;
+  background: var(--card-bg); cursor: pointer; box-shadow: none;
+  transition: transform 0.12s, border-color 0.12s;
+}
+.game-tile:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--primary); }
+.game-tile.sel { border-color: var(--primary); background: var(--accent-bg); }
+.game-tile:disabled { cursor: default; opacity: 0.9; }
+.game-tile .em { font-size: 30px; }
+.game-tile .gn { font-size: 13px; font-weight: 800; }
+.game-tile .gd { font-size: 10px; color: var(--text-sub); }
+
 /* Game Carousel */
 .game-carousel {
   display: flex;
