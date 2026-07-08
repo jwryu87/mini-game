@@ -67,6 +67,9 @@ import YutNori from '../games/YutNori'
 import LiarGame from '../games/LiarGame'
 import SnowFight from '../games/SnowFight'
 import GeoGuessrTeam from '../games/GeoGuessrTeam'
+import TwoTruths from '../games/TwoTruths'
+import BalanceGame from '../games/BalanceGame'
+import WhoTmi from '../games/WhoTmi'
 import GhostAvatar from './GhostAvatar'
 
 const DEFAULT_TEAM_NAMES = ['홍팀', '청팀', '녹팀', '주황팀']
@@ -79,6 +82,9 @@ const GAME_COMPONENTS = {
   liar: LiarGame,
   snowfight: SnowFight,
   geoguessr: GeoGuessrTeam,
+  twotruths: TwoTruths,
+  balance: BalanceGame,
+  whotmi: WhoTmi,
 }
 
 export default function GameRoom({ roomCode, playerId, playerName, games, onLeave }) {
