@@ -67,23 +67,12 @@ import YutNori from '../games/YutNori'
 import LiarGame from '../games/LiarGame'
 import SnowFight from '../games/SnowFight'
 import GeoGuessrTeam from '../games/GeoGuessrTeam'
+import GhostAvatar from './GhostAvatar'
 
 const DEFAULT_TEAM_NAMES = ['홍팀', '청팀', '녹팀', '주황팀']
 const TEAM_EMOJI = ['🔴', '🔵', '🟢', '🟠']
 const TEAM_CSS = ['team-0', 'team-1', 'team-2', 'team-3']
 const TEAM_HEX = ['#FF7B7B', '#6BA6FF', '#37CFBE', '#FFC44D']
-
-function GhostAvatar({ color, size = 34 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true" style={{ display: 'block', margin: '0 auto' }}>
-      <path d="M50 12 C29 12 19 30 19 52 L19 84 Q25 78 31 84 Q37 90 43 84 Q49 78 50 84 Q51 78 57 84 Q63 90 69 84 Q75 78 81 84 L81 52 C81 30 71 12 50 12 Z" fill={color} />
-      <circle cx="40" cy="50" r="4.5" fill="#2A2247" />
-      <circle cx="60" cy="50" r="4.5" fill="#2A2247" />
-      <circle cx="33" cy="59" r="4" fill="#fff" opacity="0.4" />
-      <circle cx="67" cy="59" r="4" fill="#fff" opacity="0.4" />
-    </svg>
-  )
-}
 
 const GAME_COMPONENTS = {
   yutnori: YutNori,
@@ -238,7 +227,7 @@ export default function GameRoom({ roomCode, playerId, playerName, games, onLeav
           <div className="player-list" style={{ gap: 4 }}>
             {playerList.sort((a, b) => a.order - b.order).map(p => (
               <div key={p.id} className={`player-card ${TEAM_CSS[p.team]}`} style={{ padding: '6px 8px' }}>
-                <GhostAvatar color={TEAM_HEX[p.team]} size={32} />
+                <GhostAvatar color={p.avatarColor || TEAM_HEX[p.team]} size={32} cheek={false} />
                 <div style={{ fontSize: 12, fontWeight: 700, marginTop: 2 }}>{p.name} {p.id === roomData.host ? '👑' : ''}</div>
                 <div style={{ fontSize: 10, color: '#666' }}>{getTeamName(p.team)}</div>
                 {isHost && p.id !== playerId && (

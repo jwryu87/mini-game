@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { db, ref, set, get } from '../firebase'
+import GhostAvatar, { AVATAR_COLORS } from './GhostAvatar'
 
 function generateRoomCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
@@ -10,12 +11,15 @@ function generateRoomCode() {
 
 export default function Lobby({ playerId, playerName: savedName, onJoin }) {
   const [name, setName] = useState(savedName)
+  const [color, setColor] = useState(() => sessionStorage.getItem('avatarColor') || AVATAR_COLORS[0])
   const [joinCode, setJoinCode] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  const pickColor = (c) => { setColor(c); sessionStorage.setItem('avatarColor', c) }
+
   const createRoom = async () => {
-    if (!name.trim()) return setError('이름을 입력해주세요')
+    if (!name.trim()) return setError('닉네임을 입력해주세요')
     setLoading(true)
     setError('')
     try {
@@ -26,7 +30,7 @@ export default function Lobby({ playerId, playerName: savedName, onJoin }) {
         currentGame: null,
         createdAt: Date.now(),
         players: {
-          [playerId]: { name: name.trim(), team: 0, order: 0 }
+          [playerId]: { name: name.trim(), team: 0, order: 0, avatarColor: color }
         }
       })
       onJoin(code, name.trim())
@@ -37,7 +41,7 @@ export default function Lobby({ playerId, playerName: savedName, onJoin }) {
   }
 
   const joinRoom = async () => {
-    if (!name.trim()) return setError('이름을 입력해주세요')
+    if (!name.trim()) return setError('닉네임을 입력해주세요')
     if (!joinCode.trim()) return setError('방 코드를 입력해주세요')
     setLoading(true)
     setError('')
@@ -58,7 +62,7 @@ export default function Lobby({ playerId, playerName: savedName, onJoin }) {
       }
       const team = playerCount % 4
       await set(ref(db, `rooms/${code}/players/${playerId}`), {
-        name: name.trim(), team, order: playerCount
+        name: name.trim(), team, order: playerCount, avatarColor: color
       })
       onJoin(code, name.trim())
     } catch (e) {
@@ -69,33 +73,48 @@ export default function Lobby({ playerId, playerName: savedName, onJoin }) {
 
   return (
     <div className="card lobby">
-      <h2 style={{ marginBottom: 20 }}>🏠 게임 로비</h2>
-      <div>
+      <div className="maker">
+        <div className="maker-lb">내 캐릭터 만들기</div>
+        <GhostAvatar color={color} size={66} />
         <input
+          className="nick-input"
           placeholder="닉네임 입력"
           value={name}
           onChange={e => setName(e.target.value)}
           maxLength={8}
         />
+        <div className="swatches">
+          {AVATAR_COLORS.map(c => (
+            <button
+              key={c}
+              className={`sw${c === color ? ' on' : ''}`}
+              style={{ background: c }}
+              onClick={() => pickColor(c)}
+              aria-label={`캐릭터 색 ${c}`}
+            />
+          ))}
+        </div>
       </div>
-      <div className="actions">
+
+      <div className="cta-row">
         <button className="btn-primary" onClick={createRoom} disabled={loading}>
           🎮 방 만들기
         </button>
+        <div className="join-box">
+          <input
+            placeholder="방 코드"
+            value={joinCode}
+            onChange={e => setJoinCode(e.target.value.toUpperCase())}
+            maxLength={4}
+            style={{ width: '100%', letterSpacing: 3, fontWeight: 700, textAlign: 'center' }}
+          />
+          <button className="btn-secondary" onClick={joinRoom} disabled={loading}>
+            🔑 입장
+          </button>
+        </div>
       </div>
-      <div style={{ display: 'flex', gap: 8, justifyContent: 'center', alignItems: 'center' }}>
-        <input
-          placeholder="방 코드 입력"
-          value={joinCode}
-          onChange={e => setJoinCode(e.target.value.toUpperCase())}
-          maxLength={4}
-          style={{ width: 140, letterSpacing: 4, fontWeight: 700 }}
-        />
-        <button className="btn-secondary" onClick={joinRoom} disabled={loading}>
-          입장하기
-        </button>
-      </div>
-      {error && <p style={{ color: '#E53935', marginTop: 12, fontWeight: 600 }}>{error}</p>}
+
+      {error && <p style={{ color: '#E53935', marginTop: 12, fontWeight: 600, textAlign: 'center' }}>{error}</p>}
     </div>
   )
 }
