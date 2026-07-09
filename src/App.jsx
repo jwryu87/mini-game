@@ -15,6 +15,9 @@ const GAMES = [
   { id: 'timingstop', name: '타이밍 스톱', emoji: '⏱️', desc: '감으로 7초 맞히기' },
   { id: 'roulette', name: '복불복 룰렛', emoji: '🎰', desc: '당첨자 뽑기' },
   { id: 'nunchi', name: '눈치 게임', emoji: '🔢', desc: '겹치면 꽝!' },
+  { id: 'drawguess', name: '그림 맞히기', emoji: '🎨', desc: '그리고 맞혀요' },
+  { id: 'bombrelay', name: '폭탄 릴레이', emoji: '💣', desc: '단어 대고 넘겨!' },
+  { id: 'rankus', name: '모두의 순위', emoji: '📊', desc: '팀원 순위 맞히기' },
 ]
 
 const THEMES = [
