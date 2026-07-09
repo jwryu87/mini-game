@@ -70,6 +70,11 @@ import GeoGuessrTeam from '../games/GeoGuessrTeam'
 import TwoTruths from '../games/TwoTruths'
 import BalanceGame from '../games/BalanceGame'
 import WhoTmi from '../games/WhoTmi'
+import ClickBattle from '../games/ClickBattle'
+import Reaction from '../games/Reaction'
+import TimingStop from '../games/TimingStop'
+import Roulette from '../games/Roulette'
+import Nunchi from '../games/Nunchi'
 import GhostAvatar from './GhostAvatar'
 
 const DEFAULT_TEAM_NAMES = ['홍팀', '청팀', '녹팀', '주황팀']
@@ -85,6 +90,11 @@ const GAME_COMPONENTS = {
   twotruths: TwoTruths,
   balance: BalanceGame,
   whotmi: WhoTmi,
+  clickbattle: ClickBattle,
+  reaction: Reaction,
+  timingstop: TimingStop,
+  roulette: Roulette,
+  nunchi: Nunchi,
 }
 
 export default function GameRoom({ roomCode, playerId, playerName, games, onLeave }) {

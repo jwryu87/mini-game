@@ -10,6 +10,11 @@ const GAMES = [
   { id: 'twotruths', name: '투 트루스 원 라이', emoji: '🕵️', desc: '거짓말 하나 찾기' },
   { id: 'balance', name: '밸런스 게임', emoji: '⚖️', desc: '둘 중 하나 골라!' },
   { id: 'whotmi', name: '누구게 TMI', emoji: '🙈', desc: '누구 얘길까?' },
+  { id: 'clickbattle', name: '광클 배틀', emoji: '🖱️', desc: '10초 클릭 대결' },
+  { id: 'reaction', name: '반응속도', emoji: '⚡', desc: '초록불에 터치!' },
+  { id: 'timingstop', name: '타이밍 스톱', emoji: '⏱️', desc: '감으로 7초 맞히기' },
+  { id: 'roulette', name: '복불복 룰렛', emoji: '🎰', desc: '당첨자 뽑기' },
+  { id: 'nunchi', name: '눈치 게임', emoji: '🔢', desc: '겹치면 꽝!' },
 ]
 
 const THEMES = [
