@@ -64,7 +64,7 @@ export default function TwoTruths({ roomCode, playerId, players, isHost, onEndGa
             <button className="btn-primary" onClick={submit} style={{ width: '100%', marginTop: 8 }}>제출</button>
           </div>
         ) : <p style={{ textAlign: 'center', color: '#2E7D32', fontWeight: 700 }}>✅ 제출 완료 — 대기 중 ({doneCnt}/{players.length})</p>}
-        {isHost && doneCnt >= 2 && <button className="btn-primary" onClick={startPresent} style={{ width: '100%', marginTop: 10 }}>발표 시작 ({doneCnt}명) →</button>}
+        {isHost && doneCnt >= 1 && <button className="btn-primary" onClick={startPresent} style={{ width: '100%', marginTop: 10 }}>발표 시작 ({doneCnt}명) →</button>}
       </div>
     )
   }

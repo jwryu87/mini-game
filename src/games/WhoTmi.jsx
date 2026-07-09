@@ -50,7 +50,7 @@ export default function WhoTmi({ roomCode, playerId, players, isHost, onEndGame 
             <button className="btn-primary" onClick={submit} style={{ width: '100%', marginTop: 10 }}>제출</button>
           </div>
         ) : <p style={{ textAlign: 'center', color: '#2E7D32', fontWeight: 700 }}>✅ 제출 완료 ({doneCnt}/{players.length})</p>}
-        {isHost && doneCnt >= 2 && <button className="btn-primary" onClick={start} style={{ width: '100%', marginTop: 10 }}>맞히기 시작 ({doneCnt}개) →</button>}
+        {isHost && doneCnt >= 1 && <button className="btn-primary" onClick={start} style={{ width: '100%', marginTop: 10 }}>맞히기 시작 ({doneCnt}개) →</button>}
       </div>
     )
   }
