@@ -47,20 +47,20 @@ function initState(players, subject) {
 const S = {
   wrap: { maxWidth: 520, margin: '0 auto', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif' },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #f0f0f0' },
-  title: { margin: 0, fontSize: 20, fontWeight: 800, letterSpacing: -0.5, color: '#1a1a2e' },
+  title: { margin: 0, fontSize: 20, fontWeight: 800, letterSpacing: -0.5, color: '#322C4E' },
   lobbyBtn: { padding: '6px 14px', borderRadius: 20, border: '1px solid #e0e0e0', background: '#fff', fontSize: 12, color: '#666', cursor: 'pointer', fontWeight: 600, transition: 'all .15s' },
   body: { padding: '24px 20px' },
   section: { textAlign: 'center' },
   badge: (color) => ({ display: 'inline-block', padding: '4px 14px', borderRadius: 20, fontSize: 12, fontWeight: 700, background: color + '15', color, letterSpacing: -0.3 }),
-  heading: { fontSize: 22, fontWeight: 800, color: '#1a1a2e', margin: '12px 0 4px', letterSpacing: -0.5 },
+  heading: { fontSize: 22, fontWeight: 800, color: '#322C4E', margin: '12px 0 4px', letterSpacing: -0.5 },
   sub: { fontSize: 14, color: '#999', margin: '0 0 20px', lineHeight: 1.6 },
-  btnPrimary: { padding: '14px 36px', borderRadius: 14, border: 'none', background: '#1a1a2e', color: '#fff', fontSize: 16, fontWeight: 800, cursor: 'pointer', transition: 'all .15s', letterSpacing: -0.3 },
-  btnSecondary: { padding: '14px 36px', borderRadius: 14, border: '2px solid #1a1a2e', background: 'transparent', color: '#1a1a2e', fontSize: 16, fontWeight: 800, cursor: 'pointer', transition: 'all .15s' },
-  btnSmall: { padding: '10px 24px', borderRadius: 12, border: 'none', background: '#1a1a2e', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', transition: 'all .15s' },
+  btnPrimary: { padding: '14px 36px', borderRadius: 14, border: 'none', background: '#7C6BF0', color: '#fff', fontSize: 16, fontWeight: 800, cursor: 'pointer', transition: 'all .15s', letterSpacing: -0.3, boxShadow: '0 4px 0 #4B3DBE' },
+  btnSecondary: { padding: '14px 36px', borderRadius: 14, border: '2px solid #7C6BF0', background: 'transparent', color: '#322C4E', fontSize: 16, fontWeight: 800, cursor: 'pointer', transition: 'all .15s' },
+  btnSmall: { padding: '10px 24px', borderRadius: 12, border: 'none', background: '#7C6BF0', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', transition: 'all .15s' },
   chip: (active) => ({
     padding: '10px 18px', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer',
-    border: active ? '2px solid #1a1a2e' : '2px solid #eee',
-    background: active ? '#1a1a2e' : '#fff',
+    border: active ? '2px solid #7C6BF0' : '2px solid #eee',
+    background: active ? '#7C6BF0' : '#fff',
     color: active ? '#fff' : '#555',
     transition: 'all .15s', display: 'inline-flex', alignItems: 'center', gap: 6,
   }),
@@ -148,7 +148,7 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
         {gs.phase === 'setup' && isHost && (
           <div style={S.section}>
             <div style={{ ...S.card('#f8f8fa'), textAlign: 'left', marginBottom: 24 }}>
-              <p style={{ fontSize: 15, fontWeight: 800, color: '#1a1a2e', marginBottom: 10 }}>게임 방법</p>
+              <p style={{ fontSize: 15, fontWeight: 800, color: '#322C4E', marginBottom: 10 }}>게임 방법</p>
               <div style={{ fontSize: 13, color: '#666', lineHeight: 1.8 }}>
                 <div>1. 모두에게 같은 <strong>단어</strong>가 주어지지만, <strong style={{ color: '#E53935' }}>라이어 1명</strong>만 단어를 모릅니다</div>
                 <div>2. 돌아가며 단어를 <strong>설명</strong>합니다 (단어를 직접 말하면 안 돼요!)</div>
@@ -183,7 +183,7 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
         {gs.phase === 'setup' && !isHost && (
           <div style={{ ...S.section, padding: '40px 0' }}>
             <div style={{ ...S.card('#f8f8fa'), textAlign: 'left', marginBottom: 24 }}>
-              <p style={{ fontSize: 15, fontWeight: 800, color: '#1a1a2e', marginBottom: 10 }}>게임 방법</p>
+              <p style={{ fontSize: 15, fontWeight: 800, color: '#322C4E', marginBottom: 10 }}>게임 방법</p>
               <div style={{ fontSize: 13, color: '#666', lineHeight: 1.8 }}>
                 <div>1. 모두에게 같은 <strong>단어</strong>가 주어지지만, <strong style={{ color: '#E53935' }}>라이어 1명</strong>만 단어를 모릅니다</div>
                 <div>2. 돌아가며 단어를 <strong>설명</strong>합니다 (단어를 직접 말하면 안 돼요!)</div>
@@ -213,9 +213,9 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
                 <div style={{
                   position: 'absolute', width: '100%', height: '100%',
                   backfaceVisibility: 'hidden', borderRadius: 20,
-                  background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
+                  background: 'linear-gradient(135deg, #7C6BF0, #5B4BD6)',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: '0 8px 30px rgba(26,26,46,0.25)',
+                  boxShadow: '0 8px 30px rgba(80,60,180,0.3)',
                 }}>
                   <div style={{ fontSize: 32 }}>🃏</div>
                   <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.7)', marginTop: 8 }}>터치하여 확인</div>
@@ -225,7 +225,7 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
                   position: 'absolute', width: '100%', height: '100%',
                   backfaceVisibility: 'hidden', borderRadius: 20,
                   transform: 'rotateY(180deg)',
-                  background: isLiar ? 'linear-gradient(135deg, #1a1a2e, #0f3460)' : '#fff',
+                  background: isLiar ? 'linear-gradient(135deg, #322C4E, #5B4BD6)' : '#fff',
                   border: isLiar ? 'none' : '2px solid #f0f0f0',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                   boxShadow: isLiar ? '0 8px 30px rgba(0,0,0,0.3)' : '0 8px 30px rgba(0,0,0,0.08)',
@@ -239,7 +239,7 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
                   ) : (
                     <>
                       <div style={{ fontSize: 12, color: '#aaa', fontWeight: 600 }}>주제: {gs.subject}</div>
-                      <div style={{ fontSize: 30, fontWeight: 900, color: '#1a1a2e', marginTop: 8, letterSpacing: -0.5 }}>{gs.keyword}</div>
+                      <div style={{ fontSize: 30, fontWeight: 900, color: '#322C4E', marginTop: 8, letterSpacing: -0.5 }}>{gs.keyword}</div>
                     </>
                   )}
                 </div>
@@ -269,7 +269,7 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
                 return (
                   <div key={id} style={{
                     padding: '12px 16px', margin: '6px 0', borderRadius: 14,
-                    background: isCurrent ? '#1a1a2e' : isDone ? '#f0faf0' : '#f8f8fa',
+                    background: isCurrent ? '#7C6BF0' : isDone ? '#f0faf0' : '#f8f8fa',
                     color: isCurrent ? '#fff' : '#333',
                     display: 'flex', alignItems: 'center', gap: 10,
                     transition: 'all .2s',
@@ -312,7 +312,7 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
             <p style={S.heading}>투표</p>
             <p style={S.sub}>라이어라고 생각하는 사람에게 투표하세요</p>
 
-            <div style={{ ...S.badge('#1a1a2e'), marginBottom: 20 }}>
+            <div style={{ ...S.badge('#7C6BF0'), marginBottom: 20 }}>
               {votedCount}/{allIds.length}명 투표 완료
             </div>
 
@@ -394,7 +394,7 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
                 <p style={{ fontSize: 15, color: '#E53935', fontWeight: 700 }}>진짜 라이어: {getName(gs.liarId)}</p>
                 <div style={{ marginTop: 12, padding: '10px 20px', background: 'rgba(255,255,255,0.7)', borderRadius: 12, display: 'inline-block' }}>
                   <span style={{ fontSize: 13, color: '#999' }}>정답: </span>
-                  <span style={{ fontSize: 20, fontWeight: 900, color: '#1a1a2e' }}>{gs.keyword}</span>
+                  <span style={{ fontSize: 20, fontWeight: 900, color: '#322C4E' }}>{gs.keyword}</span>
                 </div>
               </div>
             ) : (
@@ -404,7 +404,7 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
                 <p style={{ fontSize: 15, color: '#C62828', fontWeight: 700 }}>라이어: {getName(gs.liarId)}</p>
                 <div style={{ marginTop: 12, padding: '10px 20px', background: 'rgba(255,255,255,0.7)', borderRadius: 12, display: 'inline-block' }}>
                   <span style={{ fontSize: 13, color: '#999' }}>정답: </span>
-                  <span style={{ fontSize: 20, fontWeight: 900, color: '#1a1a2e' }}>{gs.keyword}</span>
+                  <span style={{ fontSize: 20, fontWeight: 900, color: '#322C4E' }}>{gs.keyword}</span>
                 </div>
               </div>
             )}
@@ -437,7 +437,7 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
                     placeholder="정답을 입력하세요"
                     style={{
                       padding: '14px 18px', fontSize: 16, borderRadius: 14,
-                      border: '2px solid #1a1a2e', width: 200, textAlign: 'center',
+                      border: '2px solid #7C6BF0', width: 200, textAlign: 'center',
                       fontWeight: 700, outline: 'none',
                     }}
                   />
@@ -466,14 +466,14 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
               </div>
             )}
             {liarCaught && liarGuessCorrect && (
-              <div style={{ ...S.card('linear-gradient(135deg,#1a1a2e,#16213e)'), textAlign: 'center', padding: 32 }}>
+              <div style={{ ...S.card('linear-gradient(135deg,#322C4E,#4B3DBE)'), textAlign: 'center', padding: 32 }}>
                 <div style={{ fontSize: 48 }}>😈</div>
                 <p style={{ fontSize: 24, fontWeight: 900, color: '#E53935', margin: '12px 0 8px' }}>라이어 승리!</p>
                 <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)' }}>라이어가 정답을 맞췄습니다!</p>
               </div>
             )}
             {!liarCaught && (
-              <div style={{ ...S.card('linear-gradient(135deg,#1a1a2e,#16213e)'), textAlign: 'center', padding: 32 }}>
+              <div style={{ ...S.card('linear-gradient(135deg,#322C4E,#4B3DBE)'), textAlign: 'center', padding: 32 }}>
                 <div style={{ fontSize: 48 }}>😈</div>
                 <p style={{ fontSize: 24, fontWeight: 900, color: '#E53935', margin: '12px 0 8px' }}>라이어 승리!</p>
                 <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)' }}>라이어를 찾지 못했습니다</p>
@@ -482,7 +482,7 @@ export default function LiarGame({ roomCode, playerId, playerName, players, isHo
 
             <div style={{ ...S.card('#f8f8fa'), marginTop: 16, textAlign: 'center' }}>
               <span style={{ fontSize: 13, color: '#999' }}>라이어: </span>
-              <span style={{ fontWeight: 800, color: '#1a1a2e' }}>{getName(gs.liarId)}</span>
+              <span style={{ fontWeight: 800, color: '#322C4E' }}>{getName(gs.liarId)}</span>
               <span style={{ margin: '0 8px', color: '#ddd' }}>|</span>
               <span style={{ fontSize: 13, color: '#999' }}>정답: </span>
               <span style={{ fontWeight: 800, color: '#E65100' }}>{gs.keyword}</span>
