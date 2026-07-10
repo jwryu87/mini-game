@@ -78,6 +78,7 @@ import Nunchi from '../games/Nunchi'
 import DrawGuess from '../games/DrawGuess'
 import BombRelay from '../games/BombRelay'
 import RankUs from '../games/RankUs'
+import WordHunt from '../games/WordHunt'
 import GhostAvatar from './GhostAvatar'
 
 const DEFAULT_TEAM_NAMES = ['홍팀', '청팀', '녹팀', '주황팀']
@@ -101,6 +102,7 @@ const GAME_COMPONENTS = {
   drawguess: DrawGuess,
   bombrelay: BombRelay,
   rankus: RankUs,
+  wordhunt: WordHunt,
 }
 
 export default function GameRoom({ roomCode, playerId, playerName, games, onLeave }) {

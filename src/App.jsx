@@ -18,6 +18,7 @@ const GAMES = [
   { id: 'drawguess', name: '그림 맞히기', emoji: '🎨', desc: '그리고 맞혀요' },
   { id: 'bombrelay', name: '폭탄 릴레이', emoji: '💣', desc: '단어 대고 넘겨!' },
   { id: 'rankus', name: '모두의 순위', emoji: '📊', desc: '팀원 순위 맞히기' },
+  { id: 'wordhunt', name: '단어 사냥', emoji: '🔠', desc: '글자 이어 단어 찾기' },
 ]
 
 const THEMES = [
