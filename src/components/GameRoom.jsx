@@ -40,7 +40,7 @@ function RoomChat({ roomCode, playerId, playerName }) {
         💬 채팅
       </div>
       <div ref={el => listRef.current = el}
-        style={{ height: 90, overflow: 'auto', padding: 6, fontSize: 12, background: '#FAFAFA' }}>
+        style={{ height: 220, overflow: 'auto', padding: 6, fontSize: 12, background: '#FAFAFA' }}>
         {messages.length === 0 && <div style={{ color: '#bbb', textAlign: 'center', paddingTop: 20 }}>메시지를 보내보세요!</div>}
         {messages.map((m, i) => (
           <div key={i} style={{ marginBottom: 3, wordBreak: 'break-word', textAlign: 'left' }}>
