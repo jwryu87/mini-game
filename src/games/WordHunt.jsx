@@ -88,6 +88,7 @@ export default function WordHunt({ roomCode, playerId, players, isHost, onEndGam
     const pts = ptsFor(word)
     setMsg(`✅ ${word} +${pts}점!`)
     await update(ref(db, `rooms/${roomCode}/gameState/found/${playerId}`), { [word]: pts })
+    await update(gsRef, { lastFind: { name: getName(playerId), pts, ts: Date.now() } })
   }
 
   if (!gs) return <div className="card" style={{ padding: 40, textAlign: 'center' }}>준비 중...</div>
@@ -148,32 +149,49 @@ export default function WordHunt({ roomCode, playerId, players, isHost, onEndGam
         <span style={{ fontWeight: 900, color: remain < 15 ? '#E53935' : '#322C4E' }}>⏰ {Math.ceil(remain)}초</span>
         <span style={{ fontSize: 12, fontWeight: 800, color: '#5B4BD6' }}>내 점수 {scoreOf(myFound)}점 · {Object.keys(myFound).length}개</span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: 5, maxWidth: 440, margin: '0 auto' }}>
-        {board.map((s, i) => {
-          const idx = sel.indexOf(i)
-          return (
-            <button key={i} onClick={() => tap(i)}
-              style={{ aspectRatio: '1', padding: 0, borderRadius: 12, fontSize: size >= 7 ? 16 : 19, fontWeight: 900, boxShadow: 'none',
-                border: '2px solid', borderColor: idx >= 0 ? P : '#EDE9FB',
-                background: idx >= 0 ? P : '#fff', color: idx >= 0 ? '#fff' : '#322C4E', position: 'relative' }}>
-              {s}
-              {idx >= 0 && <span style={{ position: 'absolute', top: 1, right: 4, fontSize: 9, opacity: 0.8 }}>{idx + 1}</span>}
-            </button>
-          )
-        })}
-      </div>
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', maxWidth: 440, margin: '10px auto 0' }}>
-        <span style={{ flex: 1, fontWeight: 900, fontSize: 17, color: P, minHeight: 24 }}>{curWord || <span style={{ color: '#C9C2E8', fontSize: 13, fontWeight: 600 }}>글자를 이어보세요</span>}</span>
-        <button className="btn-secondary" onClick={() => setSel([])} style={{ padding: '7px 14px', fontSize: 13 }}>지움</button>
-        <button className="btn-primary" onClick={submit} disabled={sel.length < 2} style={{ padding: '7px 18px', fontSize: 14 }}>제출</button>
-      </div>
-      {msg && <p style={{ textAlign: 'center', fontSize: 13, fontWeight: 700, color: msg.startsWith('✅') ? '#2E7D32' : '#E53935', marginTop: 6 }}>{msg}</p>}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, justifyContent: 'center', marginTop: 10 }}>
-        {board2.map(p => (
-          <span key={p.id} style={{ fontSize: 11, fontWeight: 800, background: '#F8F7FC', color: '#5B4BD6', borderRadius: 20, padding: '3px 10px' }}>
-            {p.name} {p.score}점
-          </span>
-        ))}
+      <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div style={{ flex: '0 1 440px', minWidth: 280 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: 5 }}>
+            {board.map((s, i) => {
+              const idx = sel.indexOf(i)
+              return (
+                <button key={i} onClick={() => tap(i)}
+                  style={{ aspectRatio: '1', padding: 0, borderRadius: 12, fontSize: size >= 7 ? 16 : 19, fontWeight: 900, boxShadow: 'none',
+                    border: '2px solid', borderColor: idx >= 0 ? P : '#EDE9FB',
+                    background: idx >= 0 ? P : '#fff', color: idx >= 0 ? '#fff' : '#322C4E', position: 'relative' }}>
+                  {s}
+                  {idx >= 0 && <span style={{ position: 'absolute', top: 1, right: 4, fontSize: 9, opacity: 0.8 }}>{idx + 1}</span>}
+                </button>
+              )
+            })}
+          </div>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', margin: '10px 0 0' }}>
+            <span style={{ flex: 1, fontWeight: 900, fontSize: 17, color: P, minHeight: 24 }}>{curWord || <span style={{ color: '#C9C2E8', fontSize: 13, fontWeight: 600 }}>글자를 이어보세요</span>}</span>
+            <button className="btn-secondary" onClick={() => setSel([])} style={{ padding: '7px 14px', fontSize: 13 }}>지움</button>
+            <button className="btn-primary" onClick={submit} disabled={sel.length < 2} style={{ padding: '7px 18px', fontSize: 14 }}>제출</button>
+          </div>
+          {msg && <p style={{ textAlign: 'center', fontSize: 13, fontWeight: 700, color: msg.startsWith('✅') ? '#2E7D32' : '#E53935', marginTop: 6 }}>{msg}</p>}
+        </div>
+        <div style={{ flex: '0 1 200px', minWidth: 170 }}>
+          <p style={{ fontSize: 12, fontWeight: 800, color: '#948CB6', margin: '0 0 6px' }}>📝 내가 찾은 단어</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+            {Object.entries(myFound).map(([w, p]) => (
+              <span key={w} style={{ fontSize: 12, fontWeight: 800, background: '#F0EDFE', color: '#5B4BD6', borderRadius: 20, padding: '3px 10px' }}>{w} +{p}</span>
+            ))}
+            {!Object.keys(myFound).length && <span style={{ fontSize: 12, color: '#C9C2E8' }}>아직 없음</span>}
+          </div>
+          {gs.lastFind && Date.now() - gs.lastFind.ts < 5000 && gs.lastFind.name !== getName(playerId) && (
+            <p style={{ fontSize: 12, fontWeight: 800, color: '#E65100', marginTop: 10 }}>🔔 {gs.lastFind.name}님이 {gs.lastFind.pts}점 단어 발견!</p>
+          )}
+          <p style={{ fontSize: 12, fontWeight: 800, color: '#948CB6', margin: '14px 0 6px' }}>🏆 실시간 순위</p>
+          <div style={{ display: 'grid', gap: 4 }}>
+            {board2.map((p, i) => (
+              <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, fontWeight: 800, background: i === 0 ? '#F0EDFE' : '#F8F7FC', color: '#5B4BD6', borderRadius: 10, padding: '4px 10px' }}>
+                <span>{p.name}</span><span>{p.score}점 · {Object.keys(p.words).length}개</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )
