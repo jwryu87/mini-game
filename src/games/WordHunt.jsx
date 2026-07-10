@@ -44,6 +44,7 @@ export default function WordHunt({ roomCode, playerId, players, isHost, onEndGam
   const [gs, setGs] = useState(null)
   const [sel, setSel] = useState([])
   const [msg, setMsg] = useState('')
+  const [sizeChoice, setSizeChoice] = useState('auto')
   const [, setTick] = useState(0)
   const gsRef = ref(db, `rooms/${roomCode}/gameState`)
 
@@ -67,7 +68,7 @@ export default function WordHunt({ roomCode, playerId, players, isHost, onEndGam
   const getName = id => players.find(p => p.id === id)?.name || '?'
 
   const startGame = () => {
-    const sz = boardSizeFor(players.length)
+    const sz = sizeChoice === 'auto' ? boardSizeFor(players.length) : sizeChoice
     set(gsRef, { phase: 'run', size: sz, board: genBoard(sz), startAt: Date.now() + 3000, endAt: Date.now() + 3000 + DUR, found: {} })
   }
   const tap = (i) => {
@@ -102,16 +103,28 @@ export default function WordHunt({ roomCode, playerId, players, isHost, onEndGam
     </div>
   )
 
+  const resolvedSize = sizeChoice === 'auto' ? boardSizeFor(players.length) : sizeChoice
   if (stage === 'ready') return (
     <div className="card" style={{ textAlign: 'center' }}><Head />
       <p style={{ fontSize: 40, margin: '8px 0' }}>🔠</p>
       <p style={{ fontSize: 13, color: '#888', lineHeight: 1.7 }}>
         붙어 있는 글자(대각선 OK)를 이어 <b>사전 단어</b>를 만들어요.<br />
-        2음절 1점, 3음절 2점, 4음절+ 3점 — 2분 동안 최다 득점!<br />
-        보드 크기는 인원따라: 혼자 5x5, 2~6명 6x6, 7명+ 7x7
+        2음절 1점, 3음절 2점, 4음절+ 3점 — 2분 동안 최다 득점!
       </p>
-      {isHost ? <button className="btn-primary" onClick={startGame} style={{ marginTop: 12, padding: '12px 32px' }}>시작! 🚀 ({boardSizeFor(players.length)}x{boardSizeFor(players.length)})</button>
-        : <p style={{ color: '#aaa', marginTop: 12 }}>방장 대기 중...</p>}
+      {isHost ? (
+        <div style={{ marginTop: 10 }}>
+          <p style={{ fontSize: 12, color: '#948CB6', marginBottom: 6 }}>보드 크기 (클수록 숨은 단어 많음)</p>
+          <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
+            {[['auto', '자동'], [5, '5×5'], [7, '7×7'], [10, '10×10']].map(([v, label]) => (
+              <button key={String(v)} onClick={() => setSizeChoice(v)}
+                style={{ padding: '7px 14px', borderRadius: 12, fontSize: 13, fontWeight: 800, boxShadow: 'none', cursor: 'pointer',
+                  border: '2px solid', borderColor: sizeChoice === v ? P : '#EDE9FB',
+                  background: sizeChoice === v ? '#F0EDFE' : '#fff', color: sizeChoice === v ? '#5B4BD6' : '#948CB6' }}>{label}</button>
+            ))}
+          </div>
+          <button className="btn-primary" onClick={startGame} style={{ marginTop: 12, padding: '12px 32px' }}>시작! 🚀 ({resolvedSize}×{resolvedSize})</button>
+        </div>
+      ) : <p style={{ color: '#aaa', marginTop: 12 }}>방장 대기 중...</p>}
     </div>
   )
   if (stage === 'count') return (
@@ -150,17 +163,17 @@ export default function WordHunt({ roomCode, playerId, players, isHost, onEndGam
         <span style={{ fontSize: 12, fontWeight: 800, color: '#5B4BD6' }}>내 점수 {scoreOf(myFound)}점 · {Object.keys(myFound).length}개</span>
       </div>
       <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-        <div style={{ flex: '0 1 440px', minWidth: 280 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: 5 }}>
+        <div style={{ flex: size >= 10 ? '0 1 560px' : '0 1 440px', minWidth: 280 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: size >= 10 ? 3 : 5 }}>
             {board.map((s, i) => {
               const idx = sel.indexOf(i)
               return (
                 <button key={i} onClick={() => tap(i)}
-                  style={{ aspectRatio: '1', padding: 0, borderRadius: 12, fontSize: size >= 7 ? 16 : 19, fontWeight: 900, boxShadow: 'none',
+                  style={{ aspectRatio: '1', padding: 0, borderRadius: size >= 10 ? 8 : 12, fontSize: size >= 10 ? 13 : size >= 7 ? 16 : 19, fontWeight: 900, boxShadow: 'none',
                     border: '2px solid', borderColor: idx >= 0 ? P : '#EDE9FB',
                     background: idx >= 0 ? P : '#fff', color: idx >= 0 ? '#fff' : '#322C4E', position: 'relative' }}>
                   {s}
-                  {idx >= 0 && <span style={{ position: 'absolute', top: 1, right: 4, fontSize: 9, opacity: 0.8 }}>{idx + 1}</span>}
+                  {idx >= 0 && <span style={{ position: 'absolute', top: 0, right: 3, fontSize: 8, opacity: 0.8 }}>{idx + 1}</span>}
                 </button>
               )
             })}
