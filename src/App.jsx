@@ -19,6 +19,7 @@ const GAMES = [
   { id: 'bombrelay', name: '폭탄 릴레이', emoji: '💣', desc: '단어 대고 넘겨!' },
   { id: 'rankus', name: '모두의 순위', emoji: '📊', desc: '팀원 순위 맞히기' },
   { id: 'wordhunt', name: '단어 사냥', emoji: '🔠', desc: '글자 이어 단어 찾기' },
+  { id: 'kpiquiz', name: '지표 퀴즈', emoji: '📈', desc: '이 정의, 무슨 지표?' },
 ]
 
 const THEMES = [
