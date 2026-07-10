@@ -35,7 +35,7 @@ export default function KpiQuiz({ roomCode, playerId, players, isHost, onEndGame
   const getName = id => players.find(p => p.id === id)?.name || '?'
   const scores = gs.scores || {}
   const start = () => {
-    const deck = shuffle(KPI_QUIZ.map((_, i) => i))
+    const deck = shuffle(KPI_QUIZ.map((_, i) => i)).slice(0, 5)
     set(gsRef, { phase: 'quiz', deck, qi: 0, options: makeOptions(deck, deck[0]), answers: {}, reveal: false, scores: {} })
   }
   const pick = async (opt) => { if (!gs.reveal) await update(ref(db, `rooms/${roomCode}/gameState/answers`), { [playerId]: opt }) }
@@ -54,7 +54,7 @@ export default function KpiQuiz({ roomCode, playerId, players, isHost, onEndGame
   if (gs.phase === 'ready') return (
     <div className="card" style={{ textAlign: 'center' }}><Head />
       <p style={{ fontSize: 40, margin: '8px 0' }}>📈</p>
-      <p style={{ fontSize: 13, color: '#888' }}>지표 정의를 보고 <b>어떤 지표인지</b> 맞혀보세요. 총 {KPI_QUIZ.length}문제, 정답 1점.</p>
+      <p style={{ fontSize: 13, color: '#888' }}>지표 정의를 보고 <b>어떤 지표인지</b> 맞혀보세요. {KPI_QUIZ.length}문제 풀에서 랜덤 5문제, 정답 1점.</p>
       {isHost ? <button className="btn-primary" onClick={start} style={{ marginTop: 12, padding: '12px 32px' }}>시작! 🚀</button>
         : <p style={{ color: '#aaa', marginTop: 12 }}>방장 대기 중...</p>}
     </div>
