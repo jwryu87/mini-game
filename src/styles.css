@@ -8,6 +8,9 @@
   --yellow: #FFC44D;
   --coral: #FF7B7B;
   --bg: #F3F0FF;
+  --ink-base: #5B4CA8;   /* 배경 베이스 (밝은 보라) */
+  --ink-deep: #241C4D;   /* 로고 외곽선용 짙은 잉크 */
+  --lime: #E4FF57;
   --card-bg: #fff;
   --card-border: #EDE9FB;
   --text: #322C4E;
@@ -21,14 +24,36 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
-  background: var(--bg);
-  background-image:
-    radial-gradient(circle at 12% 18%, rgba(124, 107, 240, 0.14), transparent 45%),
-    radial-gradient(circle at 88% 12%, rgba(255, 196, 77, 0.12), transparent 40%),
-    radial-gradient(circle at 78% 88%, rgba(55, 207, 190, 0.12), transparent 45%);
-  background-attachment: fixed;
+  background: var(--ink-base);
   color: var(--text);
   min-height: 100vh;
+}
+
+/* ---- 잉크 배경 (기본 테마 전용) ---- */
+.ink-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.ink-bg svg { width: 100%; height: 100%; display: block; }
+.container { position: relative; z-index: 1; }
+
+/* ---- 워드마크 ---- */
+.wm { display: block; width: min(452px, 76vw); height: auto; margin: 0 auto; }
+.wm-blob { fill: var(--ink-deep); opacity: 0.72; }
+.wm-sub, .wm-main, .wm-c-text {
+  font-family: 'Luckiest Guy', 'Black Han Sans', sans-serif;
+  paint-order: stroke fill;      /* 외곽선이 글자를 파먹지 않게 — 이게 있어야 스플래툰식 두꺼운 테두리가 됨 */
+  stroke-linejoin: round;
+  letter-spacing: 1px;
+}
+.wm-sub { font-size: 86px; fill: var(--lime); stroke: var(--ink-deep); stroke-width: 17px; }
+.wm-main { font-size: 152px; fill: #fff; stroke: var(--ink-deep); stroke-width: 21px; filter: drop-shadow(0 9px 0 var(--primary)); }
+.wm-compact { width: 176px; margin: 0; }
+.wm-c-text { font-size: 36px; fill: #fff; stroke: var(--ink-deep); stroke-width: 7px; }
+
+/* ---- 히어로 ---- */
+.hero { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.hero-row { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.hero-sub {
+  color: var(--lime); font-weight: 800; font-size: 15px; letter-spacing: -0.2px;
+  background: var(--ink-deep); padding: 5px 16px; border-radius: 999px;
 }
 
 button {
@@ -75,21 +100,29 @@ input:focus, select:focus { border-color: var(--primary); }
 .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 12px;
+  padding: 12px 20px 24px;
 }
 
 .card {
-  background: var(--card-bg);
-  border: none;
+  /* 반투명 + blur — 불투명 흰 판이면 배경 잉크와 경계가 칼같이 잘려서 붕 뜬다 */
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
   border-radius: var(--radius);
   padding: 18px;
-  box-shadow: 0 10px 34px rgba(80, 60, 180, 0.12);
+  box-shadow: 0 16px 44px rgba(26, 16, 60, 0.22);
+}
+/* 레트로 테마들은 불투명 배경을 쓰므로 blur를 끈다 */
+.theme-win95 .card, .theme-slack .card, .theme-pixel .card, .theme-baemin .card {
+  backdrop-filter: none; -webkit-backdrop-filter: none;
 }
 
 .header {
   text-align: center;
-  padding: 24px 20px 16px;
+  padding: 4px 20px 10px;
 }
+.hero-ghost { position: absolute; right: -10px; bottom: 14px; animation: bob 3.2s ease-in-out infinite; filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.55)); }
 .header .brand-row { display: inline-flex; align-items: center; gap: 12px; text-align: left; }
 .header .mascot { animation: bob 3.2s ease-in-out infinite; flex-shrink: 0; }
 @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
@@ -187,19 +220,24 @@ input:focus, select:focus { border-color: var(--primary); }
 .game-btn .name { font-size: 18px; font-weight: 700; }
 
 /* Game Gallery (대기실 게임 그리드) */
-.game-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* 게임 수가 늘어도 스크롤 없이 한눈에 들어오도록 가로형 타일 + 폭에 맞춰 열 수 자동 조절 */
+.game-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 8px; }
 .game-tile {
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-  padding: 14px 8px; border: 2px solid var(--card-border); border-radius: 16px;
+  display: grid; grid-template-columns: auto 1fr; column-gap: 10px;
+  align-items: center; text-align: left;
+  padding: 9px 12px; border: 2px solid var(--card-border); border-radius: 14px;
   background: var(--card-bg); cursor: pointer; box-shadow: none;
   transition: transform 0.12s, border-color 0.12s;
 }
 .game-tile:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--primary); }
 .game-tile.sel { border-color: var(--primary); background: var(--accent-bg); }
 .game-tile:disabled { cursor: default; opacity: 0.9; }
-.game-tile .em { font-size: 30px; }
-.game-tile .gn { font-size: 13px; font-weight: 800; }
-.game-tile .gd { font-size: 10px; color: var(--text-sub); }
+.game-tile .em { grid-row: 1 / 3; font-size: 24px; line-height: 1; }
+.game-tile .gn { grid-column: 2; align-self: end; font-size: 13px; font-weight: 800; }
+.game-tile .gd {
+  grid-column: 2; align-self: start; font-size: 10px; color: var(--text-sub);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 
 /* Game Carousel */
 .game-carousel {
@@ -365,15 +403,15 @@ input:focus, select:focus { border-color: var(--primary); }
   padding: 4px 10px;
   font-size: 11px;
   border-radius: 6px;
-  background: rgba(255,255,255,0.6);
-  border: 1px solid #DDD;
-  color: #666;
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #4A4266;
+  font-weight: 700;
 }
 .theme-picker button.active {
-  background: #222;
-  color: #fff;
-  border-color: #222;
+  background: var(--lime);
+  color: #14102B;
+  border-color: var(--lime);
 }
 
 /* ==================== CHAT SEND BUTTON ==================== */
@@ -445,6 +483,12 @@ input:focus, select:focus { border-color: var(--primary); }
 body.theme-win95 {
   --primary: #000080;
   --bg: #008080;
+  --card-bg: #C0C0C0;
+  --card-border: #808080;
+  --text: #000;
+  --text-sub: #404040;
+  --accent-bg: #D4D0C8;
+  --input-border: #808080;
   background: #008080;
   color: #000;
   font-family: 'MS Sans Serif', 'Courier New', Tahoma, Geneva, sans-serif;
@@ -466,7 +510,9 @@ body.theme-win95 {
 .theme-win95 .btn-primary:hover { background: #D4D0C8; }
 .theme-win95 .btn-gold { background: #C0C0C0; border: 2px outset #FFF; box-shadow: none; color: #000; }
 .theme-win95 .btn-secondary { background: #C0C0C0; border: 2px outset #FFF; }
-.theme-win95 .container { background: #C0C0C0; max-width: 900px; border: 2px outset #FFF; padding: 2px; }
+.theme-win95 .container { background: #C0C0C0; max-width: 1220px; border: 2px outset #FFF; padding: 2px; }
+/* 창 폭이 좁아 타일 최소폭을 줄여야 2열 아래로 떨어지지 않는다 */
+.theme-win95 .game-gallery { grid-template-columns: repeat(auto-fill, minmax(178px, 1fr)); }
 .theme-win95 .card { background: #C0C0C0; border: 2px inset #808080; border-radius: 0; box-shadow: none; padding: 8px; }
 .theme-win95 .header { background: linear-gradient(90deg, #000080, #1084D0); color: #FFF; padding: 4px 8px; text-align: left; }
 .theme-win95 .header h1 { color: #FFF; font-size: 14px; font-weight: bold; }
@@ -504,6 +550,12 @@ body.theme-win95 {
 body.theme-slack {
   --primary: #E01E5A;
   --primary-hover: #D01050;
+  --card-bg: #222529;
+  --card-border: #36373A;
+  --text: #D1D2D3;
+  --text-sub: #8D8D8E;
+  --accent-bg: #2C2D30;
+  --input-border: #36373A;
   background: #1A1D21;
   color: #D1D2D3;
   font-family: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -564,6 +616,12 @@ body.theme-slack {
 body.theme-pixel {
   --primary: #00ff41;
   --primary-hover: #33ff66;
+  --card-bg: #1a1a2e;
+  --card-border: #2f5d3a;
+  --text: #cccccc;
+  --text-sub: #7d9c86;
+  --accent-bg: #16213e;
+  --input-border: #2f5d3a;
   background: #0f0f23;
   color: #cccccc;
   font-family: 'Courier New', 'Consolas', monospace;
@@ -619,6 +677,12 @@ body.theme-pixel {
 body.theme-baemin {
   --primary: #06C7BE;
   --primary-hover: #05B8B0;
+  --card-bg: #fff;
+  --card-border: #E8E4DF;
+  --text: #333;
+  --text-sub: #9A938C;
+  --accent-bg: #E6F9F8;
+  --input-border: #E2DDD7;
   background: #F5F0EB;
   color: #333;
   font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
@@ -663,6 +727,18 @@ body.theme-baemin {
 .theme-baemin .bgm-level { color: #06C7BE; }
 
 /* ==================== RESPONSIVE ==================== */
+/* 대기실 3단(참가자 / 게임 / 채팅) */
+.room-layout { display: flex; gap: 10px; }
+.room-col-players { flex: 0 0 220px; min-width: 0; }
+.room-col-games { flex: 1; min-width: 0; }
+.room-col-chat { flex: 0 0 240px; min-width: 0; }
+
+/* 좁은 화면에서는 가로 3단을 유지할 수 없어 세로로 쌓는다 */
+@media (max-width: 900px) {
+  .room-layout { flex-direction: column; }
+  .room-col-players, .room-col-games, .room-col-chat { flex: 1 1 auto; }
+}
+
 @media (max-width: 768px) {
   .header h1 { font-size: 24px; }
   .room-code { font-size: 32px; letter-spacing: 4px; }

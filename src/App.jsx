@@ -1,11 +1,27 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Lobby from './components/Lobby'
 import GameRoom from './components/GameRoom'
+import InkBackground from './components/InkBackground'
+import Wordmark from './components/Wordmark'
+
+function Mascot({ size = 46, className = 'mascot' }) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M50 10 C27 10 16 29 16 53 L16 87 Q23 80 29.5 87 Q36 94 42.5 87 Q49 80 50 87 Q51 80 57.5 87 Q64 94 70.5 87 Q77 80 84 87 L84 53 C84 29 73 10 50 10 Z" fill="#7C6BF0" />
+      <ellipse cx="39" cy="49" rx="5.5" ry="7" fill="#2A2247" />
+      <ellipse cx="61" cy="49" rx="5.5" ry="7" fill="#2A2247" />
+      <circle cx="31" cy="60" r="6" fill="#FF7B7B" opacity="0.55" />
+      <circle cx="69" cy="60" r="6" fill="#FF7B7B" opacity="0.55" />
+      <path d="M44 62 Q50 68 56 62" stroke="#2A2247" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+    </svg>
+  )
+}
 
 const GAMES = [
   { id: 'yutnori', name: '윷놀이', emoji: '🎯', desc: '전통 보드게임' },
   { id: 'liar', name: '라이어 게임', emoji: '🤥', desc: '거짓말쟁이를 찾아라' },
   { id: 'snowfight', name: '눈싸움 배틀', emoji: '🐾', desc: '동물 눈싸움 대전' },
+  { id: 'staring', name: '진짜 눈싸움', emoji: '👁️', desc: '먼저 깜빡이면 패배' },
   { id: 'geoguessr', name: 'GeoGuessr 팀전', emoji: '🌍', desc: '거리뷰 보고 위치 맞히기' },
   { id: 'twotruths', name: '투 트루스 원 라이', emoji: '🕵️', desc: '거짓말 하나 찾기' },
   { id: 'balance', name: '밸런스 게임', emoji: '⚖️', desc: '둘 중 하나 골라!' },
@@ -92,22 +108,34 @@ export default function App() {
   const handleLeaveRoom = () => setRoom(null)
 
   return (
-    <div className="container">
+    <>
+      {/* 컨테이너 밖에 둬야 한다 — 안에 두면 position:fixed 배경이 static인 카드들 위로 올라온다 */}
+      {!theme && <InkBackground />}
+      <div className="container">
       <div className={`header${room ? ' compact' : ''}`}>
-        <div className="brand-row">
-          <svg className="mascot" width="46" height="46" viewBox="0 0 100 100" aria-hidden="true">
-            <path d="M50 10 C27 10 16 29 16 53 L16 87 Q23 80 29.5 87 Q36 94 42.5 87 Q49 80 50 87 Q51 80 57.5 87 Q64 94 70.5 87 Q77 80 84 87 L84 53 C84 29 73 10 50 10 Z" fill="#7C6BF0" />
-            <ellipse cx="39" cy="49" rx="5.5" ry="7" fill="#2A2247" />
-            <ellipse cx="61" cy="49" rx="5.5" ry="7" fill="#2A2247" />
-            <circle cx="31" cy="60" r="6" fill="#FF7B7B" opacity="0.55" />
-            <circle cx="69" cy="60" r="6" fill="#FF7B7B" opacity="0.55" />
-            <path d="M44 62 Q50 68 56 62" stroke="#2A2247" strokeWidth="2.6" fill="none" strokeLinecap="round" />
-          </svg>
-          <div>
-            <h1>미니게임 파티</h1>
-            <p>방 코드로 모여서, 다 같이 한 판 🎉</p>
+        {theme ? (
+          // 레트로 테마들은 자체 세계관이 있어서 워드마크 대신 기존 텍스트 헤더 유지
+          <div className="brand-row">
+            <Mascot />
+            <div>
+              <h1>미니게임 파티</h1>
+              <p>방 코드로 모여서, 다 같이 한 판 🎉</p>
+            </div>
           </div>
-        </div>
+        ) : room ? (
+          <div className="brand-row">
+            <Mascot size={26} />
+            <Wordmark compact />
+          </div>
+        ) : (
+          <div className="hero">
+            <div className="hero-row">
+              <Wordmark />
+              <Mascot size={64} className="mascot hero-ghost" />
+            </div>
+            <p className="hero-sub">방 코드로 모여서, 다 같이 한 판 🎉</p>
+          </div>
+        )}
       </div>
       <div className="top-bar">
         <div className="theme-picker">
@@ -145,6 +173,7 @@ export default function App() {
           onLeave={handleLeaveRoom}
         />
       )}
-    </div>
+      </div>
+    </>
   )
 }

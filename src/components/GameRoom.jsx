@@ -35,25 +35,25 @@ function RoomChat({ roomCode, playerId, playerName }) {
   }
 
   return (
-    <div style={{ marginTop: 8, border: '1px solid #E0E0E0', borderRadius: 10, overflow: 'hidden' }}>
-      <div style={{ background: '#F5F5F5', padding: '4px 10px', fontSize: 11, fontWeight: 700, color: '#666' }}>
+    <div style={{ marginTop: 8, border: '1px solid var(--card-border)', borderRadius: 10, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--accent-bg)', padding: '4px 10px', fontSize: 11, fontWeight: 700, color: 'var(--text-sub)' }}>
         💬 채팅
       </div>
       <div ref={el => listRef.current = el}
-        style={{ height: 220, overflow: 'auto', padding: 6, fontSize: 12, background: '#FAFAFA' }}>
-        {messages.length === 0 && <div style={{ color: '#bbb', textAlign: 'center', paddingTop: 20 }}>메시지를 보내보세요!</div>}
+        style={{ height: 220, overflow: 'auto', padding: 6, fontSize: 12, background: 'var(--card-bg)' }}>
+        {messages.length === 0 && <div style={{ color: 'var(--text-sub)', textAlign: 'center', paddingTop: 20 }}>메시지를 보내보세요!</div>}
         {messages.map((m, i) => (
           <div key={i} style={{ marginBottom: 3, wordBreak: 'break-word', textAlign: 'left' }}>
-            <span style={{ fontWeight: 700, color: m.pid === playerId ? '#C62828' : '#333' }}>{m.name}:</span>
-            <span style={{ color: '#555' }}> {m.text}</span>
+            <span style={{ fontWeight: 700, color: m.pid === playerId ? '#C62828' : 'var(--text)' }}>{m.name}:</span>
+            <span style={{ color: 'var(--text)' }}> {m.text}</span>
           </div>
         ))}
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', borderTop: '1px solid #E0E0E0', padding: '4px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', borderTop: '1px solid var(--card-border)', padding: '4px' }}>
         <input value={input} onChange={e => setInput(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && !e.nativeEvent.isComposing) send() }}
           placeholder="메시지 입력..."
-          style={{ flex: 1, border: 'none', padding: '6px 8px', fontSize: 13, outline: 'none', background: 'transparent' }} />
+          style={{ flex: 1, border: 'none', padding: '6px 8px', fontSize: 13, outline: 'none', background: 'transparent', color: 'var(--text)' }} />
         <button className="chat-send-btn" onClick={send}>
           <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
             <path d="M1.5 2.25a.755.755 0 0 1 1-.71l15.596 7.807a.73.73 0 0 1 0 1.306L2.5 18.46a.755.755 0 0 1-1-.71V11.5l9.5-1.5-9.5-1.5V2.25z"/>
@@ -66,6 +66,7 @@ function RoomChat({ roomCode, playerId, playerName }) {
 import YutNori from '../games/YutNori'
 import LiarGame from '../games/LiarGame'
 import SnowFight from '../games/SnowFight'
+import StaringContest from '../games/StaringContest'
 import GeoGuessrTeam from '../games/GeoGuessrTeam'
 import TwoTruths from '../games/TwoTruths'
 import BalanceGame from '../games/BalanceGame'
@@ -81,16 +82,15 @@ import RankUs from '../games/RankUs'
 import WordHunt from '../games/WordHunt'
 import KpiQuiz from '../games/KpiQuiz'
 import GhostAvatar from './GhostAvatar'
+import { TEAM_NAMES, TEAM_EMOJI, TEAM_CSS, TEAM_HEX, teamCountFor } from '../teams'
 
-const DEFAULT_TEAM_NAMES = ['홍팀', '청팀', '녹팀', '주황팀']
-const TEAM_EMOJI = ['🔴', '🔵', '🟢', '🟠']
-const TEAM_CSS = ['team-0', 'team-1', 'team-2', 'team-3']
-const TEAM_HEX = ['#FF7B7B', '#6BA6FF', '#37CFBE', '#FFC44D']
+const DEFAULT_TEAM_NAMES = TEAM_NAMES
 
 const GAME_COMPONENTS = {
   yutnori: YutNori,
   liar: LiarGame,
   snowfight: SnowFight,
+  staring: StaringContest,
   geoguessr: GeoGuessrTeam,
   twotruths: TwoTruths,
   balance: BalanceGame,
@@ -164,7 +164,7 @@ export default function GameRoom({ roomCode, playerId, playerName, games, onLeav
       const j = Math.floor(Math.random() * (i + 1));
       [ids[i], ids[j]] = [ids[j], ids[i]]
     }
-    const numTeams = Math.min(4, Math.ceil(ids.length / 2))
+    const numTeams = teamCountFor(ids.length)
     const updates = {}
     ids.forEach((id, i) => {
       updates[`rooms/${roomCode}/players/${id}/team`] = i % numTeams
@@ -230,9 +230,9 @@ export default function GameRoom({ roomCode, playerId, playerName, games, onLeav
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: 10 }}>
+      <div className="room-layout">
         {/* Left: participants + team names */}
-        <div style={{ flex: '0 0 220px', minWidth: 0 }}>
+        <div className="room-col-players">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
             <h3 style={{ fontSize: 13, margin: 0 }}>👥 참가자</h3>
             {isHost && playerList.length >= 2 && (
@@ -285,7 +285,7 @@ export default function GameRoom({ roomCode, playerId, playerName, games, onLeav
         </div>
 
         {/* Center: game gallery + start */}
-        <div style={{ flex: 1, minWidth: 0 }}>
+        <div className="room-col-games">
           <h3 style={{ fontSize: 13, margin: '0 0 8px' }}>🎮 게임 고르기</h3>
           <div className="game-gallery">
             {games.map(g => (
@@ -308,7 +308,7 @@ export default function GameRoom({ roomCode, playerId, playerName, games, onLeav
         </div>
 
         {/* Right: chat */}
-        <div style={{ flex: '0 0 240px', minWidth: 0 }}>
+        <div className="room-col-chat">
           <RoomChat roomCode={roomCode} playerId={playerId} playerName={playerName} />
         </div>
       </div>

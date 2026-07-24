@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { db, ref, set, get } from '../firebase'
 import GhostAvatar, { AVATAR_COLORS } from './GhostAvatar'
+import { teamCountFor, pickTeamFor } from '../teams'
 
 function generateRoomCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
@@ -60,7 +61,12 @@ export default function Lobby({ playerId, playerName: savedName, onJoin }) {
         setLoading(false)
         return
       }
-      const team = playerCount % 4
+      // 순서대로 4팀에 흩뿌리지 않고, 인원수에 맞는 팀 수 안에서 가장 적은 팀에 붙인다
+      const counts = [0, 0, 0, 0]
+      Object.values(room.players || {}).forEach(p => {
+        if (typeof p.team === 'number' && p.team >= 0 && p.team < 4) counts[p.team]++
+      })
+      const team = pickTeamFor(counts, teamCountFor(playerCount + 1))
       await set(ref(db, `rooms/${code}/players/${playerId}`), {
         name: name.trim(), team, order: playerCount, avatarColor: color
       })
